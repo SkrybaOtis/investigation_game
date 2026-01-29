@@ -1,6 +1,6 @@
 abstract final class ApiConstants {
   static const String baseUrl = 'https://cdn.jsdelivr.net/gh/SkrybaOtis/strt_mstr_invests@latest';
-  static const String manifestEndpoint = '/random_paczki/gepetto_manifest.json';
+  static const String manifestEndpoint = '/episodes_manifest_v2.json';
   static const String episodesPath = '/episodes';
   
   static const Duration connectTimeout = Duration(seconds: 30);
