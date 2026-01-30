@@ -1,8 +1,7 @@
-// ignore_for_file: unnecessary_underscores
-
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../data/models/episode_manifest_model.dart';
 import '../../domain/repositories/episode_repository.dart';
@@ -94,6 +93,7 @@ class EpisodeDetailScreen extends ConsumerWidget {
                         children: [
                           TileLayer(
                             urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                            userAgentPackageName: "com.streets.mysteries.student.project",
                           ),
                           MarkerLayer(
                             markers: EpisodeMapMarkerBuilder.buildPointMarkers(
@@ -101,6 +101,18 @@ class EpisodeDetailScreen extends ConsumerWidget {
                               color: Colors.red,
                             ),
                           ),
+                          RichAttributionWidget(
+                            attributions: [
+                              // Suggested attribution for the OpenStreetMap public tile server
+                              TextSourceAttribution(
+                                'OpenStreetMap contributors',
+                                onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
+                              ),
+                            ],
+                          ),
+                          // SimpleAttributionWidget(
+                          //  source: Text('OpenStreetMap contributors'),
+                          // ),
                         ],
                       ),
                     ),

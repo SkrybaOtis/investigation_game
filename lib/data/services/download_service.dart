@@ -26,8 +26,7 @@ class DownloadService {
     EpisodeManifestModel episode,
   ) async* {
     final tempDir = await getTemporaryDirectory();
-    final partialPath = '${tempDir.path}/${episode.id}_v${episode.version}.zip'
-        '${StorageConstants.partialFileSuffix}';
+    final partialPath = '${tempDir.path}/${episode.id}_v${episode.version}.zip${StorageConstants.partialFileSuffix}';
     final completedPath = '${tempDir.path}/${episode.id}_v${episode.version}.zip';
     
     final cancelToken = CancelToken();
