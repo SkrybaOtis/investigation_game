@@ -178,9 +178,11 @@ class EpisodeRepositoryImpl implements EpisodeRepository {
   Future<Map<String, dynamic>> loadEpisodeGameData(String episodeId) async {
     return await _storageService.loadEpisodeData(episodeId);
   }
-  
+
   @override
   void cancelDownload(String episodeId) {
     _downloadService.cancelDownload(episodeId);
   }
+
+  
 }

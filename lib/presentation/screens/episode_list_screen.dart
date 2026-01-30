@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/episode_providers.dart';
 import '../widgets/episode_card.dart';
 import '../widgets/shimmer_loading.dart';
+import '../widgets/cleanup_downloads_button.dart';
 import 'episode_detail_screen.dart';
 import 'episode_map_screen.dart';
 
@@ -73,6 +74,7 @@ class _EpisodeListScreenState extends ConsumerState<EpisodeListScreen> {
               },
             ),
           ),
+          CleanupDownloadsButton(),
           
           // Episode list
           Expanded(

@@ -23,9 +23,10 @@ abstract class EpisodeRepository {
   
   /// Loads episode game data
   Future<Map<String, dynamic>> loadEpisodeGameData(String episodeId);
-  
+
   /// Cancels ongoing download
   void cancelDownload(String episodeId);
+
 }
 
 enum EpisodeInstallStatus {
