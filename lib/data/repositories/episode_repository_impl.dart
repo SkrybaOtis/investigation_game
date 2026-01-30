@@ -73,6 +73,7 @@ class EpisodeRepositoryImpl implements EpisodeRepository {
     
     try {
       // Phase 1: Download
+      logger.i('Downloading started !!');
       yield progress = progress.copyWith(phase: DownloadPhase.downloading);
       
       String? zipPath;
@@ -98,6 +99,7 @@ class EpisodeRepositoryImpl implements EpisodeRepository {
       }
       
       // Phase 2: Verify
+      logger.i('Veryfying started !!');
       yield progress = progress.copyWith(phase: DownloadPhase.verifying);
       
       await _verificationService.verifyFileIntegrity(
@@ -106,6 +108,7 @@ class EpisodeRepositoryImpl implements EpisodeRepository {
       );
       
       // Phase 3: Extract
+      logger.i('Extracting started !!');
       yield progress = progress.copyWith(phase: DownloadPhase.extracting);
       
       final installedPath = await _extractionService.extractAndInstall(
@@ -115,6 +118,7 @@ class EpisodeRepositoryImpl implements EpisodeRepository {
       );
       
       // Phase 4: Validate extracted content
+      logger.i('Vadidation extracted content started !!');
       final validationResult = await _verificationService.validateEpisodeContent(
         installedPath,
       );
@@ -129,6 +133,7 @@ class EpisodeRepositoryImpl implements EpisodeRepository {
       }
       
       // Phase 5: Record installation
+      logger.i('Recorded installation started !!');
       yield progress = progress.copyWith(phase: DownloadPhase.installing);
       
       final installedSize = await FileUtils.getDirectorySize(installedPath);
@@ -143,6 +148,7 @@ class EpisodeRepositoryImpl implements EpisodeRepository {
       ));
       
       // Cleanup temp files
+      logger.i('Cleaunup temp files started !!');
       await _downloadService.cleanupTempFiles(episode.id);
       
       yield progress.copyWith(

@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:logger/logger.dart';
 
 import '../../data/models/download_progress_model.dart';
 import '../../data/models/episode_manifest_model.dart';
 import '../../data/models/installed_episode_model.dart';
 import '../../data/repositories/episode_repository_impl.dart';
 import '../../domain/repositories/episode_repository.dart';
+
 
 
 
@@ -96,6 +98,7 @@ class DownloadProgressNotifier extends StateNotifier<Map<String, DownloadProgres
     
     final repository = _ref.read(episodeRepositoryProvider);
     final stream = repository.downloadAndInstallEpisode(episode);
+    Logger logger = Logger();
     
     _subscriptions[episode.id] = stream.listen(
       (progress) {
@@ -105,11 +108,13 @@ class DownloadProgressNotifier extends StateNotifier<Map<String, DownloadProgres
           _ref.read(installedEpisodesProvider.notifier).refresh();
           _subscriptions[episode.id]?.cancel();
           _subscriptions.remove(episode.id);
+          logger.i("Donwload completed !!!");
         }
         
         if (progress.phase == DownloadPhase.failed) {
           _subscriptions[episode.id]?.cancel();
           _subscriptions.remove(episode.id);
+          logger.w("Donwload failed !!!");
         }
       },
       onError: (e) {
