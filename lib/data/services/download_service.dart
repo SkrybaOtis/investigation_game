@@ -57,7 +57,7 @@ class DownloadService {
       if (await partialFile.exists()) {
         existingBytes = await partialFile.length();
         
-        // ✅ FIX: Only resume if partial file is SMALLER than expected total
+        // Only resume if partial file is SMALLER than expected total
         if (existingBytes > 0 && existingBytes < episode.sizeBytes) {
           shouldResume = true;
           progress = progress.copyWith(
@@ -87,6 +87,8 @@ class DownloadService {
       final completedPartialFile = File(partialPath);
       if (await completedPartialFile.exists()) {
         await completedPartialFile.rename(completedPath);
+        logger.i('[DownloadService] renamed partial -> completed: $completedPath');
+        logger.i('Phase: ${controller.toString()}');
       }
       
       controller.add(progress.copyWith(
@@ -150,7 +152,6 @@ class DownloadService {
         },
       );
     } on NetworkException catch (e) {
-      // ✅ FIX: Handle 416 Range Not Satisfiable error
       if (e.statusCode == 416) {
         // Delete the problematic partial file
         final file = File(partialPath);

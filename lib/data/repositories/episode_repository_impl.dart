@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
 
 import '../../core/utils/file_utils.dart';
 import '../../domain/repositories/episode_repository.dart';
@@ -40,6 +41,12 @@ class EpisodeRepositoryImpl implements EpisodeRepository {
         _extractionService = extractionService,
         _storageService = storageService;
   
+  var logger = Logger(
+    filter: null,
+    printer: PrettyPrinter(),
+    output: null,
+  );
+
   @override
   Future<List<EpisodeManifestModel>> getAvailableEpisodes() async {
     final manifest = await _manifestService.fetchManifest();
@@ -147,6 +154,8 @@ class EpisodeRepositoryImpl implements EpisodeRepository {
         phase: DownloadPhase.failed,
         errorMessage: e.toString(),
       );
+
+      logger.i(e.toString());
       
       // Cleanup on failure
       await _downloadService.cleanupTempFiles(episode.id);
