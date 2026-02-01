@@ -103,19 +103,6 @@ class DownloadProgressNotifier extends StateNotifier<Map<String, DownloadProgres
     _subscriptions[episode.id] = stream.listen(
       (progress) {
         state = {...state, episode.id: progress};
-        
-        if (progress.phase == DownloadPhase.completed) {
-          _ref.read(installedEpisodesProvider.notifier).refresh();
-          _subscriptions[episode.id]?.cancel();
-          _subscriptions.remove(episode.id);
-          logger.i("Donwload completed !!!");
-        }
-        
-        if (progress.phase == DownloadPhase.failed) {
-          _subscriptions[episode.id]?.cancel();
-          _subscriptions.remove(episode.id);
-          logger.w("Donwload failed !!!");
-        }
       },
       onError: (e) {
         state = {
@@ -125,6 +112,18 @@ class DownloadProgressNotifier extends StateNotifier<Map<String, DownloadProgres
             errorMessage: e.toString(),
           ),
         };
+        _subscriptions[episode.id]?.cancel();
+        _subscriptions.remove(episode.id);
+        logger.w("Download failed !!!");
+      },
+      onDone: () {
+        final finalProgress = state[episode.id];
+        if (finalProgress?.phase == DownloadPhase.completed) {
+          _ref.read(installedEpisodesProvider.notifier).refresh();
+          logger.i("Download completed !!!");
+        } else {
+          logger.w("Download failed !!!");
+        }
         _subscriptions[episode.id]?.cancel();
         _subscriptions.remove(episode.id);
       },
@@ -224,4 +223,3 @@ final episodesNearLocationProvider = Provider.family<List<EpisodeManifestModel>,
     );
   },
 );
-

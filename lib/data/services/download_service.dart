@@ -73,6 +73,7 @@ class DownloadService {
       }
       
       // Attempt download with optional resume
+      final progressRef = _ProgressRef(progress);
       await _attemptDownload(
         episode: episode,
         partialPath: partialPath,
@@ -80,15 +81,16 @@ class DownloadService {
         existingBytes: existingBytes,
         shouldResume: shouldResume,
         controller: controller,
-        progressRef: _ProgressRef(progress),
+        progressRef: progressRef,
       );
+      
+      // Read back the actual final progress from the ref
+      progress = progressRef.progress;
       
       // Rename partial to completed
       final completedPartialFile = File(partialPath);
       if (await completedPartialFile.exists()) {
         await completedPartialFile.rename(completedPath);
-        logger.i('[DownloadService] renamed partial -> completed: $completedPath');
-        logger.i('Phase: ${controller.toString()}');
       }
       
       controller.add(progress.copyWith(
@@ -188,27 +190,6 @@ class DownloadService {
     }
   }
   
-  // void cancelDownload(String episodeId) {
-  //   _activeCancelTokens[episodeId]?.cancel('User cancelled');
-  //   _activeCancelTokens.remove(episodeId);
-  // }
-  
-  // Future<String> getDownloadedZipPath(String episodeId, int version) async {
-  //   final tempDir = await getTemporaryDirectory();
-  //   return '${tempDir.path}/${episodeId}_v$version.zip';
-  // }
-  
-  // Future<void> cleanupTempFiles(String episodeId) async {
-  //   final tempDir = await getTemporaryDirectory();
-    
-  //   await for (final entity in tempDir.list()) {
-  //     if (entity.path.contains(episodeId)) {
-  //       await entity.delete(recursive: true);
-  //     }
-  //   }
-  // }
-
-
   /// Cancels an ongoing download
   void cancelDownload(String episodeId) {
     _activeCancelTokens[episodeId]?.cancel('User cancelled');
@@ -283,4 +264,3 @@ class _ProgressRef {
   DownloadProgressModel progress;
   _ProgressRef(this.progress);
 }
-

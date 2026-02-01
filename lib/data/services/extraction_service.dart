@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter_archive/flutter_archive.dart';
+import 'package:archive/archive_io.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -31,14 +31,12 @@ class ExtractionService {
       // Create staging directory
       await Directory(stagingPath).create(recursive: true);
       
-      // Extract to staging
-      final zipFile = File(zipPath);
-      final stagingDir = Directory(stagingPath);
-      
-      await ZipFile.extractToDirectory(
-        zipFile: zipFile,
-        destinationDir: stagingDir,
-      );
+      // Extract to staging using archive package.
+      // InputFileStream reads directly from disk without loading the entire zip into memory.
+      final inputStream = InputFileStream(zipPath);
+      final archive = ZipDecoder().decodeStream(inputStream);
+      extractArchiveToDisk(archive, stagingPath);
+      inputStream.closeSync();
       
       // Validate extraction
       final isValid = await FileUtils.validateEpisodeStructure(stagingPath);

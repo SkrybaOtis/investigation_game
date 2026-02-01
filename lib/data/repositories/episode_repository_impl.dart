@@ -83,18 +83,23 @@ class EpisodeRepositoryImpl implements EpisodeRepository {
         progress = downloadProgress;
         
         if (downloadProgress.phase == DownloadPhase.completed) {
+          logger.w('Completion_checking');
           zipPath = await _downloadService.getDownloadedZipPath(
             episode.id,
             episode.version,
           );
-        }
+        } 
+
       }
+
       
       if (zipPath == null) {
         yield progress.copyWith(
           phase: DownloadPhase.failed,
           errorMessage: 'Download did not complete',
         );
+        logger.f('Downloading failed !!');
+
         return;
       }
       
