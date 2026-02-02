@@ -39,33 +39,33 @@ class VerificationService {
   }
   
   /// Validates episode content structure after extraction
-  Future<EpisodeValidationResult> validateEpisodeContent(String episodePath) async {
-    return await Isolate.run(() => _validateContentSync(episodePath));
+  Future<EpisodeValidationResult> validateEpisodeContent(String episodePath, String episodeId) async {
+    return await Isolate.run(() => _validateContentSync(episodePath, episodeId ));
   }
   
-  static EpisodeValidationResult _validateContentSync(String episodePath) {
+  static EpisodeValidationResult _validateContentSync(String episodePath, String episodeId) {
     final errors = <String>[];
     
-    // Check story.json exists and is valid JSON
-    final storyFile = File('$episodePath/story.json');
-    if (!storyFile.existsSync()) {
-      errors.add('Missing story.json');
+    // Check $episodeId.json exists and is valid JSON
+    final episodeFile = File('$episodePath/$episodeId.json');
+    if (!episodeFile.existsSync()) {
+      errors.add('Missing $episodeId.json');
     } else {
       try {
-        final content = storyFile.readAsStringSync();
+        final content = episodeFile.readAsStringSync();
         // Basic JSON validation - just check it's not empty
         if (content.trim().isEmpty) {
-          errors.add('story.json is empty');
+          errors.add('$episodeId.json is empty');
         }
       } catch (e) {
-        errors.add('story.json is not readable');
+        errors.add('$episodeId.json is not readable');
       }
     }
     
     // Check images directory exists
     final imagesDir = Directory('$episodePath/images');
     if (!imagesDir.existsSync()) {
-      errors.add('Missing images directory');
+      //errors.add('Missing images directory');
     }
     
     return EpisodeValidationResult(

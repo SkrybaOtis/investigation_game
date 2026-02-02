@@ -60,14 +60,14 @@ class ExtractionService {
       await _logDirectoryContents(stagingPath, 'After extraction');
       
       // Handle nested folder structure
-      final actualContentPath = await _resolveContentPath(stagingPath);
+      final actualContentPath = await _resolveContentPath(stagingPath, episodeId);
       
       // Validate extraction
-      final isValid = await FileUtils.validateEpisodeStructure(actualContentPath);
+      final isValid = await FileUtils.validateEpisodeStructure(actualContentPath, episodeId);
       
       if (!isValid) {
         await FileUtils.safeDelete(stagingPath);
-        // Include more details in the exception
+        // Include more details in the eExtracted content validation failed. Contents: [<directory does not exist>], null)xception
         final contents = await _getDirectoryContents(actualContentPath);
         throw ExtractionException(
           'Extracted content validation failed. Contents: $contents, at: $actualContentPath',
@@ -117,7 +117,7 @@ class ExtractionService {
 
 
   /// Checks if extraction created a single wrapper folder and returns actual content path
-  Future<String> _resolveContentPath(String stagingPath) async {
+  Future<String> _resolveContentPath(String stagingPath, String episodeId) async {
     final stagingDir = Directory(stagingPath);
     final entities = await stagingDir.list().toList();
     
@@ -132,7 +132,7 @@ class ExtractionService {
       final nestedDir = visibleEntities.first as Directory;
       
       // Verify the nested directory contains expected structure
-      final hasExpectedFiles = await FileUtils.validateEpisodeStructure(nestedDir.path);
+      final hasExpectedFiles = await FileUtils.validateEpisodeStructure(nestedDir.path, episodeId);
       if (hasExpectedFiles) {
         return nestedDir.path;
       }

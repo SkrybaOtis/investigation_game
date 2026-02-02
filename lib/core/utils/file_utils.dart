@@ -74,12 +74,12 @@ abstract final class FileUtils {
   }
   
   /// Validates that required episode files exist
-  static Future<bool> validateEpisodeStructure(String episodePath) async {
+  static Future<bool> validateEpisodeStructure(String episodePath, String episodeId) async {
     return await Isolate.run(() {
-      final storyFile = File('$episodePath/story.json');
-      final imagesDir = Directory('$episodePath/images');
+      final episodeFile = File('$episodePath/$episodeId.json');
+      // final imagesDir = Directory('$episodePath/images');
       
-      return storyFile.existsSync() && imagesDir.existsSync();
+      return episodeFile.existsSync(); //&& imagesDir.existsSync();
     });
   }
 }

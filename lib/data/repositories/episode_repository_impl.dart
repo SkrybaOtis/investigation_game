@@ -125,7 +125,7 @@ class EpisodeRepositoryImpl implements EpisodeRepository {
       // Phase 4: Validate extracted content
       logger.i('Vadidation extracted content started !!');
       final validationResult = await _verificationService.validateEpisodeContent(
-        installedPath,
+        installedPath, episode.id
       );
       
       if (!validationResult.isValid) {
