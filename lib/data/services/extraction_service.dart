@@ -70,7 +70,7 @@ class ExtractionService {
         // Include more details in the exception
         final contents = await _getDirectoryContents(actualContentPath);
         throw ExtractionException(
-          'Extracted content validation failed. Contents: $contents',
+          'Extracted content validation failed. Contents: $contents, at: $actualContentPath',
         );
       }
       
@@ -143,7 +143,7 @@ class ExtractionService {
   
   /// Moves contents from nested folder up to staging root
   Future<void> _flattenNestedContent(String nestedPath, String stagingPath) async {
-    final tempPath = '$stagingPath\_temp_flatten';
+    final tempPath = '$stagingPath/_temp_flatten';
     
     // Move nested content to temp location
     await FileUtils.safeMove(nestedPath, tempPath);
