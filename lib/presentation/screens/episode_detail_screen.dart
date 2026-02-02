@@ -313,11 +313,13 @@ class EpisodeDetailScreen extends ConsumerWidget {
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () {
-              ref.read(installedEpisodesProvider.notifier).deleteEpisode(episode.id);
+            onPressed: () async {
+              Navigator.pop(context);
+              await ref.read(installedEpisodesProvider.notifier).deleteEpisode(episode.id);
               ref.invalidate(episodeStatusProvider(episode));
-              Navigator.pop(context);
-              Navigator.pop(context);
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
             child: const Text('Delete'),

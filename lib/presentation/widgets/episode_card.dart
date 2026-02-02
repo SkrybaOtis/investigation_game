@@ -258,11 +258,11 @@ class EpisodeCard extends ConsumerWidget {
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () {
-              ref.read(installedEpisodesProvider.notifier)
+            onPressed: () async {
+              Navigator.pop(context);
+              await ref.read(installedEpisodesProvider.notifier)
                   .deleteEpisode(episode.id);
               ref.invalidate(episodeStatusProvider(episode));
-              Navigator.pop(context);
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
             child: const Text('Delete'),
