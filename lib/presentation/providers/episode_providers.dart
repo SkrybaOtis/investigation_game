@@ -120,6 +120,7 @@ class DownloadProgressNotifier extends StateNotifier<Map<String, DownloadProgres
         final finalProgress = state[episode.id];
         if (finalProgress?.phase == DownloadPhase.completed) {
           _ref.read(installedEpisodesProvider.notifier).refresh();
+          _ref.invalidate(episodeStatusProvider(episode));
           logger.i("Download completed !!!");
         } else {
           logger.w("Download failed !!!");

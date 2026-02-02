@@ -315,6 +315,7 @@ class EpisodeDetailScreen extends ConsumerWidget {
           TextButton(
             onPressed: () {
               ref.read(installedEpisodesProvider.notifier).deleteEpisode(episode.id);
+              ref.invalidate(episodeStatusProvider(episode));
               Navigator.pop(context);
               Navigator.pop(context);
             },

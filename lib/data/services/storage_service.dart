@@ -83,6 +83,7 @@ class StorageService {
           await episodeDir.delete();
         }
       }
+      
     }
     
     // Update registry

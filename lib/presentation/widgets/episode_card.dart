@@ -261,6 +261,7 @@ class EpisodeCard extends ConsumerWidget {
             onPressed: () {
               ref.read(installedEpisodesProvider.notifier)
                   .deleteEpisode(episode.id);
+              ref.invalidate(episodeStatusProvider(episode));
               Navigator.pop(context);
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
